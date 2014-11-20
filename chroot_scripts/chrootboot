@@ -8,17 +8,16 @@ su 0 setenforce 0
 export LOOP_BACK=/dev/block/loop4
 export SOURCE_IMG=/data/local/kali_img/kali.img
 export NEW_ROOT=/data/local/kali
-unset LD_PRELOAD
 
 # Check device
 hardw=`getprop ro.hardware`
-if [[ "$hardw" == "deb" || "$hardw" == "flo" || "$hardw" == "hammerhead" || "$hardw" == "flounder" ]]; then
-  # Mount chroot for new Pwn Pad and Pwn Phone
-  losetup $LOOP_BACK $SOURCE_IMG 
-  mount -t ext4 $LOOP_BACK $NEW_ROOT
-else
+if [[ "$hardw" == "grouper" || "$hardw" == "tilapia" ]]; then
   # Mount chroot for old Pwn Pad
-  mount -o loop -t ext4 $SOURCE_IMG $NEW_ROOT 
+  mount -o loop -t ext4 $SOURCE_IMG $NEW_ROOT
+else
+  # Mount chroot for new Pwn Pad and Pwn Phone
+  losetup $LOOP_BACK $SOURCE_IMG
+  mount -t ext4 $LOOP_BACK $NEW_ROOT
 fi
 
 # Mount other filesystems for chroot environment
@@ -43,6 +42,7 @@ sysctl -w net.ipv4.ip_forward=1 &> /dev/null
 export HOME=/root
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export TERM=xterm-color
+unset LD_PRELOAD
 
 # Copy mounts so chroot can see what is mounted
 /system/xbin/chroot $NEW_ROOT /bin/cp /proc/mounts /etc/mtab
