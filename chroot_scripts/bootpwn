@@ -4,9 +4,6 @@
 # Export chroot directory into variable
 export NEW_ROOT=/data/local/kali
 
-# Set SELinux to permissive
-su 0 setenforce 0
-
 echo "[+] Mounting filesystems..."
 
 # Remount system partition with rw flag set
