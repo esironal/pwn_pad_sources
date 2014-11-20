@@ -1,14 +1,18 @@
 # /system/bin/chrootboot
 # Start chroot environment and services at system startup
 
+# Set SELinux to permissive
+su 0 setenforce 0
+
 # Use the fourth loopback device to leave the first couple open
 export LOOP_BACK=/dev/block/loop4
 export SOURCE_IMG=/data/local/kali_img/kali.img
 export NEW_ROOT=/data/local/kali
+unset LD_PRELOAD
 
 # Check device
 hardw=`getprop ro.hardware`
-if [[ "$hardw" == "deb" || "$hardw" == "flo" || "$hardw" == "hammerhead" ]]; then
+if [[ "$hardw" == "deb" || "$hardw" == "flo" || "$hardw" == "hammerhead" || "$hardw" == "flounder" ]]; then
   # Mount chroot for new Pwn Pad and Pwn Phone
   losetup $LOOP_BACK $SOURCE_IMG 
   mount -t ext4 $LOOP_BACK $NEW_ROOT
